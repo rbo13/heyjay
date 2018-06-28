@@ -1,7 +1,6 @@
 package heyjay_test
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -28,6 +27,9 @@ func TestHeyJayOnCLI(t *testing.T) {
 
 func TestHeyJayOnWebServer(t *testing.T) {
 	user := User{Fullname: "Richard Burk", Age: 22, Address: "Cebu City"}
+	expectedContentType := "application/json"
+	expectedStatusCode := 200
+
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		heyjay.JSON(w, user)
@@ -40,11 +42,16 @@ func TestHeyJayOnWebServer(t *testing.T) {
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	fmt.Println(resp.StatusCode)
-	fmt.Println(resp.Header.Get("Content-Type"))
-	fmt.Println(string(body))
+	actualContentType := resp.Header.Get("Content-Type")
+	actualStatusCode := resp.StatusCode
 
-	// Output:
-	// 200
-	// application/json; charset=utf-8
+	if actualContentType != expectedContentType {
+		t.Errorf("Expected to be '%s', but got '%s' instead.", expectedContentType, actualContentType)
+	}
+
+	if actualStatusCode != expectedStatusCode {
+		t.Errorf("Expected to be '%d', but got '%d' instead.", expectedStatusCode, actualStatusCode)
+	}
+
+	t.Log(string(body))
 }
