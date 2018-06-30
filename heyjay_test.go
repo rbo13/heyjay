@@ -45,11 +45,11 @@ func TestHeyJayOnWebServer(t *testing.T) {
 	actualContentType := resp.Header.Get("Content-Type")
 	actualStatusCode := resp.StatusCode
 
-	if actualContentType != expectedContentType {
+	if expectedContentType != actualContentType {
 		t.Errorf("Expected to be '%s', but got '%s' instead.", expectedContentType, actualContentType)
 	}
 
-	if actualStatusCode != expectedStatusCode {
+	if expectedStatusCode != actualStatusCode {
 		t.Errorf("Expected to be '%d', but got '%d' instead.", expectedStatusCode, actualStatusCode)
 	}
 
